@@ -45,7 +45,7 @@ export const signin = async (req, res, next) => {
 
         const { password: pass, ...rest} = validUser._doc //seperates the password from the rest of the json data
 
-        res.status(200).cookie('jwt', token, {
+        res.status(200).cookie('access_token', token, {
             httpOnly: true
         }).json(rest)
     } catch (error) {
