@@ -14,6 +14,7 @@ export default function DashProfile() {
     const [imageFileUrl, setImageFileUrl] = useState(null)
     const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null)
     const [imageFileUploadError, setImageFileUploadError] = useState(null)
+    const [imageFileUploadSuccess, setImageFileUploadSuccess] = useState(null)
     const [formData, setFormData] = useState({})
     const [imageFileUploading, setImageFileUploading] = useState(false)
     const [updateUserSuccess, setUpdateUserSuccess] = useState(null)
@@ -48,6 +49,7 @@ export default function DashProfile() {
         //      }
         //    }
         //  }
+        setImageFileUploadSuccess(null)
         setImageFileUploading(true)
         setImageFileUploadError(null)
         const storage = getStorage(app)
@@ -66,12 +68,14 @@ export default function DashProfile() {
                 setImageFile(null)
                 setImageFileUrl(null)
                 setImageFileUploading(false)
+                setImageFileUploadSuccess(null)
             },
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                     setImageFileUrl(downloadURL)
                     setFormData({ ...formData, profilePicture: downloadURL })
                     setImageFileUploading(false)
+                    setImageFileUploadSuccess(true)
                 });
             }
         )
@@ -182,6 +186,7 @@ export default function DashProfile() {
                 />
             </div>
             {imageFileUploadError && <Alert color='failure'>{imageFileUploadError}</Alert>}
+            {imageFileUploadSuccess && <Alert color='success'>Image upload successfull, click update to save changes</Alert>}
             <TextInput 
                 type='text' 
                 id='username' 
@@ -225,11 +230,7 @@ export default function DashProfile() {
                     {error}
                 </Alert>
             )}
-            {signoutError && (
-                <Alert color='failure' className="mt-5">
-                    {signoutError}
-                </Alert>
-            )}
+            
             <Modal 
                 show={showModal} 
                 onClose={() => setShowModal(false)} 

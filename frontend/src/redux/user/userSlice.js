@@ -59,7 +59,7 @@ const userSlice = createSlice({
             state.error = null
         },
         signoutError: (state, action) => {
-            state.loading = false;
+            state.loading = false
             state.error = action.payload
         }
     }
