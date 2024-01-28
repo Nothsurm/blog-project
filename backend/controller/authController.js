@@ -60,7 +60,7 @@ export const google = async (req, res, next) => {
         if (user) {
             const token = jwt.sign({id: user._id}, process.env.VITE_JWT_TOKEN)
             const {password, ...rest} = user._doc //seperates password for security purposes
-            res.status(200).cookie('jwt', token, {
+            res.status(200).cookie('access_token', token, {
                 httpOnly: true,
             }).json(rest)
         } else {
