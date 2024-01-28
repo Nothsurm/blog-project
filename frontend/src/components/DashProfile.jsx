@@ -5,7 +5,7 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/
 import { app } from "../firebase.js"
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { updateStart, updateSuccess, updateFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure } from "../redux/user/userSlice.js"
+import { updateStart, updateSuccess, updateFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure, signoutStart, signoutSuccess, signoutError } from "../redux/user/userSlice.js"
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 
 export default function DashProfile() {
@@ -132,6 +132,23 @@ export default function DashProfile() {
         } catch (error) {
             dispatch(deleteUserFailure(error.message))
         }
+    };
+
+    const handleSignout = async () => {
+        try {
+            dispatch(signoutStart())
+            const res = await fetch('/api/users/signout', {
+                method: 'POST'
+            });
+            const data = await res.json()
+            if (!res.ok) {
+                dispatch(signoutError(data.message))
+            } else {
+                dispatch(signoutSuccess(data))
+            }
+        } catch (error) {
+            dispatch(signoutError(error.message))
+        }
     }
 
   return (
@@ -191,7 +208,7 @@ export default function DashProfile() {
         </form>
         <div className="text-red-500 flex justify-between mt-5">
             <span onClick={() => setShowModal(true)} className="cursor-pointer">Delete Account</span>
-            <span className="cursor-pointer">Sign Out</span>
+            <span onClick={handleSignout} className="cursor-pointer">Sign Out</span>
         </div>
             {updateUserSuccess && (
                 <Alert color='success' className="mt-5">
@@ -206,6 +223,11 @@ export default function DashProfile() {
             {error && (
                 <Alert color='failure' className="mt-5">
                     {error}
+                </Alert>
+            )}
+            {signoutError && (
+                <Alert color='failure' className="mt-5">
+                    {signoutError}
                 </Alert>
             )}
             <Modal 
