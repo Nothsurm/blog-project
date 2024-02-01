@@ -14,10 +14,9 @@ export default function UpdatePost() {
     const [file, setFile] = useState(null)
     const [imageUploadProgress, setImageUploadProgress] = useState(null)
     const [imageUploadError, setImageUploadError] = useState(null)
-    const [formData, setFormData] = useState({})
+    const [formData, setFormData] = useState('')
     const [publishError, setPublishError] = useState(null)
     const { postId } = useParams()
-    console.log(formData._id);
 
     const navigate = useNavigate()
 
@@ -30,7 +29,8 @@ export default function UpdatePost() {
                     console.log(data.message);
                     setPublishError(data.message)
                     return
-                } else {
+                } 
+                if (res.ok) {
                     setPublishError(null)
                     setFormData(data.posts[0])
                 }
