@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
+import Loader from '../components/Loader';
 
 export default function DashPosts() {
   const { currentUser } = useSelector((state) => state.user)
@@ -127,7 +128,10 @@ export default function DashPosts() {
           }
         </>
       ) : (
-        <p>You have no posts here</p>
+        <div className="flex justify-center items-center h-screen">
+          <Loader />
+        </div>
+
       )}
       <Modal 
         show={showModal} 
