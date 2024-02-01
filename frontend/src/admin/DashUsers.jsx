@@ -11,21 +11,24 @@ export default function DashUsers() {
   const [showMore, setShowMore] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [userIdToDelete, setUserIdToDelete] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        setLoading(true)
         const res = await fetch(`/api/users/getusers`)
         const data = await res.json()
         if (res.ok) {
           setUsers(data.users)
+          setLoading(false)
           if (data.users.length < 9) {
             setShowMore(false)
           }
         }
       } catch (error) {
+        setLoading(false)
         console.log(error.message)
       }
     };
@@ -68,6 +71,12 @@ export default function DashUsers() {
         }
     }
 
+    if (loading) return (
+      <div className="flex justify-center items-center h-screen w-full">
+          <Loader/>
+      </div>
+  )
+
   return (
     <div className='table-auto overflow-x-scroll w-full md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
         {currentUser.isAdmin && users.length > 0 ? (
@@ -81,8 +90,7 @@ export default function DashUsers() {
                   <Table.HeadCell>Admin</Table.HeadCell>
                   <Table.HeadCell>Delete</Table.HeadCell>
                 </Table.Head>
-            {loading ? (<Loader />) : (
-                users.map((user) => (
+                {users.map((user) => (
                     <Table.Body className='divide-y' key={user._id}>
                       <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
                         <Table.Cell>{new Date(user.createdAt).toLocaleDateString()}</Table.Cell>
@@ -107,7 +115,7 @@ export default function DashUsers() {
                         </Table.Cell>
                       </Table.Row>
                     </Table.Body>
-                  )))}
+                  ))}
                 </Table>
                 {
                   showMore && (
@@ -120,10 +128,9 @@ export default function DashUsers() {
                 }
               </>
             ) : (
-                <div className="flex justify-center items-center h-screen">
-                    <Loader />
+                <div>
+                    No Users
                 </div>
-
             )}
           <Modal 
             show={showModal} 

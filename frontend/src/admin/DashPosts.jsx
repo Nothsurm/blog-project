@@ -11,19 +11,23 @@ export default function DashPosts() {
   const [showMore, setShowMore] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [postIdToDelete, setPostIdToDelete] = useState('')
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        setLoading(true)
         const res = await fetch(`/api/post/getposts?userId=${currentUser._id}`)
         const data = await res.json()
         if (res.ok) {
           setUserPosts(data.posts)
+          setLoading(false)
           if (data.posts.length < 9) {
             setShowMore(false)
           }
         }
       } catch (error) {
+        setLoading(false)
         console.log(error.message)
       }
     };
@@ -64,6 +68,12 @@ export default function DashPosts() {
       console.log(error);
     }
   }
+
+  if (loading) return (
+    <div className="flex justify-center items-center h-screen w-full">
+        <Loader/>
+    </div>
+)
 
   return (
     <div className='table-auto overflow-x-scroll w-full md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
@@ -128,10 +138,9 @@ export default function DashPosts() {
           }
         </>
       ) : (
-        <div className="flex justify-center items-center h-screen">
-          <Loader />
+        <div>
+          No Posts
         </div>
-
       )}
       <Modal 
         show={showModal} 
