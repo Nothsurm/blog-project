@@ -14,32 +14,32 @@ export default function UpdatePost() {
     const [file, setFile] = useState(null)
     const [imageUploadProgress, setImageUploadProgress] = useState(null)
     const [imageUploadError, setImageUploadError] = useState(null)
-    const [formData, setFormData] = useState('')
+    const [formData, setFormData] = useState({})
     const [publishError, setPublishError] = useState(null)
     const { postId } = useParams()
 
     const navigate = useNavigate()
 
-    useEffect(() => {
+    const fetchPost = async () => {
         try {
-            const fetchPost = async () => {
-                const res = await fetch(`/api/post/getposts?postId=${postId}`)
-                const data = await res.json()
-                if (!res.ok) {
-                    console.log(data.message);
-                    setPublishError(data.message)
-                    return
-                } 
-                if (res.ok) {
-                    setPublishError(null)
-                    setFormData(data.posts[0])
-                }
+            const res = await fetch(`/api/post/getposts?postId=${postId}`)
+            const data = await res.json()
+            if (!res.ok) {
+                console.log(data.message);
+                setPublishError(data.message)
+                return
+            } 
+            if (res.ok) {
+                setPublishError(null)
+                setFormData(data.posts[0])
             }
-
-            fetchPost()
         } catch (error) {
-            console.log(error);
+            setPublishError(error);
         }
+    }
+
+    useEffect(() => {
+        fetchPost()
     }, [postId])
 
     const handleUploadImage = async () => {
