@@ -29,7 +29,7 @@ export default function Header() {
         }
     }
   return (
-    <Navbar className='border-b-2 fixed w-full'>
+    <Navbar className='border-b-2 sticky top-0 z-20'>
         <Link to='/' className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'>
             <span className='px-2 py-1 bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-300 text-zinc-800 rounded-lg'>Rushton's</span>
             Blog
